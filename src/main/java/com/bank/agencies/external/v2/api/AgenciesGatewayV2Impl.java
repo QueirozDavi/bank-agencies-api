@@ -7,6 +7,7 @@ import com.bank.agencies.domain.dto.StateResponseDTO;
 import com.bank.agencies.external.v2.gateway.AgenciesGatewayV2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
 
@@ -50,6 +52,7 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
         HttpRequest request = getRequest(apiURI);
 
         try {
+            log.info("trying to get Agency information.");
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HttpStatus.OK.value()) {
@@ -61,9 +64,11 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
                 List<AgencyGatewayResponse> agencyGatewayResponses = Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
                 applyingFilterPerStates(result, agencyGatewayResponses);
 
+                log.info("Success to get Agency information.");
                 return result;
             }
         } catch (IOException | InterruptedException e) {
+            log.error("failed to get Agency information: {}", e.getMessage());
             throw new RuntimeException("Error when trying get all Agencies from API");
         }
 
