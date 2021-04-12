@@ -2,7 +2,7 @@
 
     import com.bank.agencies.domain.AgencyGatewayResponse;
     import com.bank.agencies.domain.AgencyResponse;
-    import com.bank.agencies.usecase.FindAllAgenciesUseCase;
+    import com.bank.agencies.usecase.v1.FindAllAgenciesUseCase;
     import org.springframework.http.HttpStatus;
     import org.springframework.http.MediaType;
     import org.springframework.http.ResponseEntity;

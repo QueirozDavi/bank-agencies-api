@@ -3,6 +3,7 @@ package com.bank.agencies.usecase;
 import com.bank.agencies.domain.AgencyGatewayResponse;
 import com.bank.agencies.external.v1.gateway.AgenciesGateway;
 import com.bank.agencies.fixture.AgenciesFixture;
+import com.bank.agencies.usecase.v1.FindAllAgenciesUseCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

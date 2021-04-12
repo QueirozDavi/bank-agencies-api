@@ -1,4 +1,4 @@
-package com.bank.agencies.usecase;
+package com.bank.agencies.usecase.v1;
 
 import com.bank.agencies.domain.AgencyGatewayResponse;
 import com.bank.agencies.external.v1.gateway.AgenciesGateway;

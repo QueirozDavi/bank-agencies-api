@@ -4,6 +4,7 @@ import com.bank.agencies.domain.AgencyGatewayResponse;
 import com.bank.agencies.external.v2.gateway.AgenciesGatewayV2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
@@ -53,6 +55,10 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
             if (response.statusCode() == HttpStatus.OK.value()) {
                 JsonNode parent = mapper.readTree(response.body());
                 String content = parent.get("value").toString();
+
+                List<AgencyGatewayResponse> agencyGatewayResponses = Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
+                agencyGatewayResponses.forEach( a -> a.getState());
+
                 return Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
             }
         } catch (IOException | InterruptedException e) {
