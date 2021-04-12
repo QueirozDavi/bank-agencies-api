@@ -6,6 +6,7 @@ import com.bank.agencies.external.v2.gateway.AgenciesGatewayV2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FindAllAgenciesUseCaseV2 {
@@ -16,7 +17,7 @@ public class FindAllAgenciesUseCaseV2 {
         this.bankResourcesGateway = bankResourcesGateway;
     }
 
-    public List<AgencyGatewayResponse> execute(String initialPage, String finalPage) {
+    public Map<String, Object> execute(String initialPage, String finalPage) {
         return bankResourcesGateway.findAllAgencies(initialPage, finalPage);
     }
 }

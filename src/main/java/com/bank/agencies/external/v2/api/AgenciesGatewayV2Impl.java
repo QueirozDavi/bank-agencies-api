@@ -1,10 +1,14 @@
 package com.bank.agencies.external.v2.api;
 
 import com.bank.agencies.domain.AgencyGatewayResponse;
+import com.bank.agencies.domain.StatesEnum;
+import com.bank.agencies.domain.dto.AgencyResponseDTO;
+import com.bank.agencies.domain.dto.StateResponseDTO;
 import com.bank.agencies.external.v2.gateway.AgenciesGatewayV2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,9 +20,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,10 +34,17 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
     @Value( "${agencies.service.base.url}" )
     private String baseUrl;
 
+    private final ModelMapper modelMapper;
+
     ObjectMapper mapper = new ObjectMapper();
 
+    @Autowired
+    public AgenciesGatewayV2Impl(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
     @Override
-    public List<AgencyGatewayResponse> findAllAgencies(String initialPage, String finalPage) {
+    public Map<String, Object> findAllAgencies(String initialPage, String finalPage) {
 
         URI apiURI = UriComponentsBuilder
                 .fromUriString(baseUrl)
@@ -56,16 +65,30 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
                 JsonNode parent = mapper.readTree(response.body());
                 String content = parent.get("value").toString();
 
-                List<AgencyGatewayResponse> agencyGatewayResponses = Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
-                agencyGatewayResponses.forEach( a -> a.getState());
+                Map<String, Object> result = new HashMap<>();
+                List<AgencyGatewayResponse> tempList = new ArrayList<>();
+                StateResponseDTO stateResponseDTO = StateResponseDTO.builder().build();
+                stateResponseDTO.setResponse(new ArrayList<>());
 
-                return Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
+                List<AgencyGatewayResponse> agencyGatewayResponses = Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
+
+                for(StatesEnum states : StatesEnum.values()) {
+                    tempList = agencyGatewayResponses.stream().filter(e -> e.getState().equals(states.getValue()))
+                            .collect(Collectors.toList());
+
+                    tempList.forEach(t -> {
+                        stateResponseDTO.getResponse().add(modelMapper.map(t, AgencyResponseDTO.class));
+                    });
+                    result.put(states.getValue(), tempList);
+                }
+
+                return result;
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Error when trying get all Agencies from API");
         }
 
-        return Collections.emptyList();
+        return null;
     }
 
 }

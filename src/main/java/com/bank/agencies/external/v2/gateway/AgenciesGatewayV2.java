@@ -1,9 +1,7 @@
 package com.bank.agencies.external.v2.gateway;
 
-import com.bank.agencies.domain.AgencyGatewayResponse;
-
-import java.util.List;
+import java.util.Map;
 
 public interface AgenciesGatewayV2 {
-    List<AgencyGatewayResponse> findAllAgencies(String initialPage, String finalPage);
+    Map<String, Object> findAllAgencies(String initialPage, String finalPage);
 }
