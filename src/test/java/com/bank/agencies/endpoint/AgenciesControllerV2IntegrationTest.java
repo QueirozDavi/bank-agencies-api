@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(classes = { Application.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AgenciesControllerIntegrationTest {
+class AgenciesControllerV2IntegrationTest {
 
 	private static final String API_BASE_URL = "/agencies";
 

@@ -1,4 +1,4 @@
-package com.bank.agencies.external.gateway;
+package com.bank.agencies.external.v1.gateway;
 
 import com.bank.agencies.domain.AgencyGatewayResponse;
 

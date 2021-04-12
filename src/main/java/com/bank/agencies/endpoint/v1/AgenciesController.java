@@ -1,4 +1,4 @@
-    package com.bank.agencies.endpoint;
+    package com.bank.agencies.endpoint.v1;
 
     import com.bank.agencies.domain.AgencyGatewayResponse;
     import com.bank.agencies.domain.AgencyResponse;

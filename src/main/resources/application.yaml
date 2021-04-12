@@ -1,0 +1,17 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    application:
+      name: bank-agencies
+
+
+server:
+  port: 8080
+  servlet:
+    contextPath: /bank-agencies
+
+
+agencies:
+  service:
+    base:
+      url: https://olinda.bcb.gov.br/olinda/servico/Informes_Agencias/versao/v1/odata

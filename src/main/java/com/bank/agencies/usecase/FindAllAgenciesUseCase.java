@@ -1,7 +1,7 @@
 package com.bank.agencies.usecase;
 
 import com.bank.agencies.domain.AgencyGatewayResponse;
-import com.bank.agencies.external.gateway.AgenciesGateway;
+import com.bank.agencies.external.v1.gateway.AgenciesGateway;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

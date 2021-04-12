@@ -1,12 +1,12 @@
-package com.bank.agencies.external.api;
+package com.bank.agencies.external.v2.api;
 
-import com.bank.agencies.external.gateway.AgenciesGateway;
 import com.bank.agencies.domain.AgencyGatewayResponse;
+import com.bank.agencies.external.v2.gateway.AgenciesGatewayV2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Component
-public class AgenciesGatewayImpl implements AgenciesGateway {
+@Service
+public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
 
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
@@ -33,11 +33,13 @@ public class AgenciesGatewayImpl implements AgenciesGateway {
     ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public List<AgencyGatewayResponse> findAllAgencies() {
+    public List<AgencyGatewayResponse> findAllAgencies(String initialPage, String finalPage) {
 
         URI apiURI = UriComponentsBuilder
                 .fromUriString(baseUrl)
                 .queryParam("$format", "json")
+                .queryParam("$skip", initialPage)
+                .queryParam("$top", finalPage)
                 .build().toUri();
 
         HttpRequest request = HttpRequest.newBuilder()
