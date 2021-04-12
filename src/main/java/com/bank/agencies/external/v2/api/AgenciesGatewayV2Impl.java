@@ -46,17 +46,8 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
     @Override
     public Map<String, Object> findAllAgencies(String initialPage, String finalPage) {
 
-        URI apiURI = UriComponentsBuilder
-                .fromUriString(baseUrl)
-                .queryParam("$format", "json")
-                .queryParam("$skip", initialPage)
-                .queryParam("$top", finalPage)
-                .build().toUri();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(apiURI)
-                .build();
+        URI apiURI = getApiURI(initialPage, finalPage);
+        HttpRequest request = getRequest(apiURI);
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -64,23 +55,11 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
             if (response.statusCode() == HttpStatus.OK.value()) {
                 JsonNode parent = mapper.readTree(response.body());
                 String content = parent.get("value").toString();
-
                 Map<String, Object> result = new HashMap<>();
-                List<AgencyGatewayResponse> tempList = new ArrayList<>();
                 StateResponseDTO stateResponseDTO = StateResponseDTO.builder().build();
                 stateResponseDTO.setResponse(new ArrayList<>());
-
                 List<AgencyGatewayResponse> agencyGatewayResponses = Arrays.asList(mapper.readValue(content, AgencyGatewayResponse[].class));
-
-                for(StatesEnum states : StatesEnum.values()) {
-                    tempList = agencyGatewayResponses.stream().filter(e -> e.getState().equals(states.getValue()))
-                            .collect(Collectors.toList());
-
-                    tempList.forEach(t -> {
-                        stateResponseDTO.getResponse().add(modelMapper.map(t, AgencyResponseDTO.class));
-                    });
-                    result.put(states.getValue(), tempList);
-                }
+                applyingFilterPerStates(result, agencyGatewayResponses);
 
                 return result;
             }
@@ -89,6 +68,34 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
         }
 
         return null;
+    }
+
+    private HttpRequest getRequest(URI apiURI) {
+        return HttpRequest.newBuilder()
+                .GET()
+                .uri(apiURI)
+                .build();
+    }
+
+    private URI getApiURI(String initialPage, String finalPage) {
+        return UriComponentsBuilder
+                .fromUriString(baseUrl)
+                .queryParam("$format", "json")
+                .queryParam("$skip", initialPage)
+                .queryParam("$top", finalPage)
+                .build().toUri();
+    }
+
+    private void applyingFilterPerStates(Map<String, Object> result, List<AgencyGatewayResponse> agencyGatewayResponses) {
+        List<AgencyGatewayResponse> tempList;
+        for(StatesEnum states : StatesEnum.values()) {
+            tempList = agencyGatewayResponses.stream().filter(e -> e.getState().equals(states.getValue()))
+                    .collect(Collectors.toList());
+
+            tempList.forEach(t -> {
+                result.put(states.getValue(), modelMapper.map(t, AgencyResponseDTO.class));
+            });
+        }
     }
 
 }
