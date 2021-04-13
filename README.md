@@ -1,22 +1,14 @@
-# Coding Challenge Backend
-Bem vindo! Se você está aqui é porque gostamos do seu perfil e queremos conhecer um pouco mais sobre suas habilidades como desenvolvedor.
+# Bank Agencies
+Micro serviço que consome endpoint do banco central que contém todas as agencias bancárias no Brasil
 
-# Pré-requisitos
+# Pré-Requisitos para executar o projeto localmente
 * Java 11
 * Maven
 * Git
 * Intellij, Visual Studio Code, Eclipse ou a IDE de sua preferência
 
-# Critérios de avaliação
-* Compreensão dos requistos
-* Fornecer documentação explicando como rodar e testar localmente
-* Engenharia de Software
-* Cobertura de Testes
-* Versionamento
-* Arquitetura do Código
-* Separação de Responsabilidades
-* Manutenabilidade
-* Modelagem de dados (Estruturas de dados utilizadas, etc)
+# Swagger
+* http://localhost:8080/bank-agencies/swagger-ui.html
 
 # Sobre o projeto
 Esse projeto é uma API REST com SpringBoot, Maven em JAVA 11 usando uma adaptação do modelo 'Clean Architecture'.
