@@ -28,10 +28,10 @@ public class AgenciesControllerV2 {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public JsonNode findAllAgencies(@RequestParam() String initialPage,
-                                                                @RequestParam() String finalPage) {
+    public JsonNode findAllAgencies(@RequestParam() int cityIndex,
+                                                                @RequestParam() int qty) {
 
-        Map<String, Object> response = findAllAgenciesUseCase.execute(initialPage, finalPage);
+        Map<String, Object> response = findAllAgenciesUseCase.execute(cityIndex, qty);
 
         return objectMapper.convertValue(response, ObjectNode.class);
 

@@ -46,7 +46,7 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
     }
 
     @Override
-    public Map<String, Object> findAllAgencies(String initialPage, String finalPage) {
+    public Map<String, Object> findAllAgencies(int initialPage, int finalPage) {
 
         URI apiURI = getApiURI(initialPage, finalPage);
         HttpRequest request = getRequest(apiURI);
@@ -82,7 +82,7 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
                 .build();
     }
 
-    private URI getApiURI(String initialPage, String finalPage) {
+    private URI getApiURI(int initialPage, int finalPage) {
         return UriComponentsBuilder
                 .fromUriString(baseUrl)
                 .queryParam("$format", "json")
@@ -97,8 +97,11 @@ public class AgenciesGatewayV2Impl implements AgenciesGatewayV2 {
             tempList = agencyGatewayResponses.stream().filter(e -> e.getState().equals(states.getValue()))
                     .collect(Collectors.toList());
 
+            List<Object> filteredObject = new ArrayList<>();
+
             tempList.forEach(t -> {
-                result.put(states.getValue(), modelMapper.map(t, AgencyResponseDTO.class));
+                filteredObject.add(modelMapper.map(t, AgencyResponseDTO.class));
+                result.put(states.getValue(), filteredObject);
             });
         }
     }

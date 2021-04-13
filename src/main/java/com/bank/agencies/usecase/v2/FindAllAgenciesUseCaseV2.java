@@ -17,7 +17,7 @@ public class FindAllAgenciesUseCaseV2 {
         this.bankResourcesGateway = bankResourcesGateway;
     }
 
-    public Map<String, Object> execute(String initialPage, String finalPage) {
+    public Map<String, Object> execute(int initialPage, int finalPage) {
         return bankResourcesGateway.findAllAgencies(initialPage, finalPage);
     }
 }
